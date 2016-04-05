@@ -7,6 +7,10 @@ public class County {
 	private String countyCode;
 	private int cityId;
 	
+	public County(){
+		
+	}
+	
 	public County(int id, String countyName, String countyCode, int cityId) {
 		super();
 		this.id = id;

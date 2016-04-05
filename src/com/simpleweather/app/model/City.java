@@ -7,6 +7,10 @@ public class City {
 	private String cityCode;
 	private int provinceId;
 	
+	public City(){
+		
+	}
+	
 	public City(int id, String cityName, String cityCode, int provinceId) {
 		super();
 		this.id = id;

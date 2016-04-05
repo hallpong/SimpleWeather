@@ -6,6 +6,10 @@ public class Province {
 	private String provinceName;
 	private String provinceCode;
 	
+	public Province(){
+		
+	}
+	
 	public Province(int id, String provinceName, String provinceCode) {
 		super();
 		this.id = id;
