@@ -6,16 +6,19 @@ import com.simpleweather.app.util.HttpUtil;
 import com.simpleweather.app.util.Utility;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class WeatherActivity extends Activity {
+public class WeatherActivity extends Activity implements OnClickListener {
 
 	private LinearLayout llWeatherInfo;
 	private TextView tvArea;
@@ -24,6 +27,9 @@ public class WeatherActivity extends Activity {
 	private TextView tvLowTemp;
 	private TextView tvHighTemp;
 	private TextView tvWeatherDesp;
+	private Button btHome;
+	private Button btRefresh;
+	private SharedPreferences prefs;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +44,11 @@ public class WeatherActivity extends Activity {
 		tvLowTemp = (TextView) findViewById(R.id.tv_lowTemp);
 		tvHighTemp = (TextView) findViewById(R.id.tv_highTemp);
 		tvWeatherDesp = (TextView) findViewById(R.id.tv_weatherDesp);
+		btHome = (Button) findViewById(R.id.bt_home);
+		btRefresh = (Button) findViewById(R.id.bt_refresh);
 
+		btHome.setOnClickListener(this);
+		btRefresh.setOnClickListener(this);
 		String countyCode = getIntent().getStringExtra("county_code");
 		if (!TextUtils.isEmpty(countyCode)) {
 			tvPublishDate.setText("同步中...");
@@ -54,8 +64,7 @@ public class WeatherActivity extends Activity {
 	 * 没有县级代号就直接显示本地天气
 	 */
 	private void showWeather() {
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(this);
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		tvArea.setText(prefs.getString("city_name", ""));
 		tvPublishDate
 				.setText("今天" + prefs.getString("publish_time", "") + "发布");
@@ -136,5 +145,29 @@ public class WeatherActivity extends Activity {
 				+ weatherCode + ".html";
 		queryFromServer(address, "weatherCode");
 
+	}
+
+	/**
+	 * 点击侦听事件
+	 */
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.bt_home:
+			Intent intent = new Intent(this, ChooseAreaActivity.class);
+			intent.putExtra("from_weather_activity", true);
+			startActivity(intent);
+			finish();
+			break;
+		case R.id.bt_refresh:
+			tvPublishDate.setText("同步中...");
+			prefs = PreferenceManager.getDefaultSharedPreferences(this);
+			String weatherCode = prefs.getString("weather_code", "");
+			if(!TextUtils.isEmpty(weatherCode))
+				queryWeatherInfo(weatherCode);
+			break;
+		default:
+			break;
+		}
 	}
 }
