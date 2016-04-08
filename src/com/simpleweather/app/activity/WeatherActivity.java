@@ -17,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class WeatherActivity extends Activity implements OnClickListener {
@@ -31,6 +32,7 @@ public class WeatherActivity extends Activity implements OnClickListener {
 	private Button btHome;
 	private Button btRefresh;
 	private SharedPreferences prefs;
+	private RelativeLayout rlContent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		tvWeatherDesp = (TextView) findViewById(R.id.tv_weatherDesp);
 		btHome = (Button) findViewById(R.id.bt_home);
 		btRefresh = (Button) findViewById(R.id.bt_refresh);
+		rlContent = (RelativeLayout) findViewById(R.id.rl_content);
 
 		btHome.setOnClickListener(this);
 		btRefresh.setOnClickListener(this);
@@ -72,7 +75,19 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		tvCurrentDate.setText(prefs.getString("current_date", ""));
 		tvLowTemp.setText(prefs.getString("temp1", ""));
 		tvHighTemp.setText(prefs.getString("temp2", ""));
-		tvWeatherDesp.setText(prefs.getString("weather_desp", ""));
+		String weatherDesp = prefs.getString("weather_desp", "");
+		tvWeatherDesp.setText(weatherDesp);
+		if (weatherDesp.contains("—©")) {
+			rlContent.setBackgroundResource(R.drawable.bg_snow);
+		} else if (weatherDesp.contains("”Í")) {
+			rlContent.setBackgroundResource(R.drawable.bg_rain);
+		} else if (weatherDesp.contains("«Á")) {
+			rlContent.setBackgroundResource(R.drawable.bg_fine_day);
+		}else if(weatherDesp.contains("∂‡‘∆")){
+			rlContent.setBackgroundResource(R.drawable.bg_cloudy_day);
+		}else if(weatherDesp.contains("“ı")){
+			rlContent.setBackgroundResource(R.drawable.bg_fog);
+		}
 		llWeatherInfo.setVisibility(View.VISIBLE);
 		tvArea.setVisibility(View.VISIBLE);
 
