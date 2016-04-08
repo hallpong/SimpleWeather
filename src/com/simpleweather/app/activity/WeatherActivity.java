@@ -1,6 +1,7 @@
 package com.simpleweather.app.activity;
 
 import com.simpleweather.app.R;
+import com.simpleweather.app.service.AutoUpdateService;
 import com.simpleweather.app.util.HttpCallbackListener;
 import com.simpleweather.app.util.HttpUtil;
 import com.simpleweather.app.util.Utility;
@@ -74,6 +75,9 @@ public class WeatherActivity extends Activity implements OnClickListener {
 		tvWeatherDesp.setText(prefs.getString("weather_desp", ""));
 		llWeatherInfo.setVisibility(View.VISIBLE);
 		tvArea.setVisibility(View.VISIBLE);
+
+		Intent intent = new Intent(this, AutoUpdateService.class);
+		startService(intent);
 	}
 
 	/**
@@ -163,7 +167,7 @@ public class WeatherActivity extends Activity implements OnClickListener {
 			tvPublishDate.setText("Í¬²½ÖÐ...");
 			prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			String weatherCode = prefs.getString("weather_code", "");
-			if(!TextUtils.isEmpty(weatherCode))
+			if (!TextUtils.isEmpty(weatherCode))
 				queryWeatherInfo(weatherCode);
 			break;
 		default:
